@@ -54,7 +54,7 @@ function listCompletedItems (){
 		echo " "
 }
 function addAnItem (){
-		echo -n "please enter an item to add: "	
+		echo -n "please enter title for the item you want to add: "	
 		todoNum=$(cd ./todo/ && ls|wc -l)
 		let todoNum=todoNum+1
 
@@ -63,7 +63,7 @@ function addAnItem (){
 		touch ./todo/${todoNum}.txt 
 		echo ${newItem} >> ./todo/${todoNum}.txt
 		chmod 700 ./todo/${todoNum}.txt
-		echo -n "enter description: "
+		echo -n "please enter description: "
 		read description
 		
 		echo "__________________" >> ./todo/${todoNum}.txt
@@ -105,25 +105,27 @@ do
 
 if [[ "$1" == "list" && -z "$2" ]]; then
 howmany=$(cd ./todo/ && ls|wc -l)
-if [ "$howmany" -gt "0" ]; then
-		 list 
-else
-	echo "nothing to do!"
-fi
+	if [ "$howmany" -gt "0" ]; then
+		 list
+		exit 
+		else
+			echo "nothing to do!"
+	
 		exit
+	fi
 elif [ "$1" == "help" ]; then
 		
 	echo "--HELP: list, complete [item], list completed, add [item]"
-	exit
+		exit
 	
 elif [[ "$1" == "list" && "$2" == "completed" || "$1" == "list completed" ]]; then
 	if [ -z "$(ls -A ./completed)" ]; then
 	echo "no items are completed yet"
 exit	
-	fi	
+else
 		listCompletedItems
 			exit
-		
+	fi
 elif [[ "$1" == "add" &&  "$2" ]]; then
 
 	
@@ -135,21 +137,22 @@ elif [[ "$1" == "add" &&  "$2" ]]; then
 		touch ./todo/${todoNum}.txt 
 		echo $2 >> ./todo/${todoNum}.txt
 		echo "_______________________" >> ./todo/${todoNum}.txt
-
-
-chmod 700 ./todo/${todoNum}.txt
-
-	
-if  [ -p /dev/stdin ]; then
+	if  [ -p /dev/stdin ]; then
 			read pipe
 		#	echo "$pipe"
 	#	echo $2 >> ./todo/${todoNum}.txt
 		echo  $pipe >> ./todo/${todoNum}.txt
-fi
+	fi
+exit
+
+chmod 700 ./todo/${todoNum}.txt
+
+	
+
 	#	echo $pipe >>./todo/${todoNum}.txt 
 #		chmod 700 ./todo/${todoNum}.txt
 			
-		exit
+	
 
 
 
@@ -157,11 +160,10 @@ elif [[ "$1" == "complete" && "$2" ]]; then
 
 	for i in ./todo/*.txt; do
 	[ -f "$i" ]|| continue 
-		if [[ "$2" == *"$(head -n 1 $i)"* ]]; then
-
+		if [ ./todo/${2}.txt == $i ]; then
 			mv $i ./completed
-
-else
+			exit
+		else
 	echo "no such task"
 	exit
 		fi
@@ -172,8 +174,8 @@ else
 	echo "invalid input"	
 	echo "--HELP: list, complete [item], list completed, add [item]"
 			exit	
-	fi
-done
+fi
+		done
 
 
 echo  "Welcome to to-do list manager! "
