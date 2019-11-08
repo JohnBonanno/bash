@@ -11,16 +11,27 @@ if [ ! -d "./completed" ]; then
 	chmod 700 completed
 fi
 
-function list (){
-	count="1"
-	
-	for i in ./todo/*.txt; do
-	[ -f "$i" ]|| break
-		echo $count
-		cat $i
-		let count=count+1	
-		echo ""
-	done
+
+number='^[0-9]+$'
+
+function listall (){
+filename=./todo/$@
+ if [ ! -f $filename ]; then
+ echo "invalid item"
+ else
+ cat $filename
+ fi
+}
+
+function list(){
+	count=0;
+for file in ./todo/*.txt; do
+ title=$(head -n 1 $file)
+ let count=count+1
+ echo  "$count"
+ echo "$title"
+ echo ""
+done
 }
 
 function listCompletedItems (){
@@ -80,7 +91,12 @@ do
 
 
 if [[ "$1" == "list" && -z "$2" ]]; then
+howmany=$(cd ./todo/ && ls|wc -l)
+if [ "$howmany" -gt "0" ]; then
 		 list 
+else
+	echo "nothing to do!"
+fi
 		exit
 elif [ "$1" == "help" ]; then
 		
@@ -95,7 +111,7 @@ elif [[ "$1" == "add" &&  "$2" ]]; then
 
 	
 		todoNum=$(cd ./todo/ && ls|wc -l)
-		let todoNum=todoNum+1
+	let todoNum=todoNum+1
 		
 		let count=count+1
 		#	echo "$filenumber"
@@ -103,22 +119,22 @@ elif [[ "$1" == "add" &&  "$2" ]]; then
 		echo $2 >> ./todo/${todoNum}.txt
 		chmod 700 ./todo/${todoNum}.txt
 
-	#	if  [ "$(tee)" ]; then
+		if  [ -p /dev/stdin ]; then
+			read pipe
+		echo $pipe >> ./todo/${todoNUM}.txt
+		fi
 
-	#append="$(tee)"
-	#echo "$append" >> ./todo/${todoNum}.txt	
-							
-	#fi
 					exit
 
 elif [ "$1" == "complete" ]; then
 
 	for i in ./todo/*.txt; do
 	
-	if [[ "$2" == *"$(head -n 1 $i)"* ]]; then
-	
+	if [ "$2" == "$(head -n 1 $i)" ]; then
 	mv $i ./completed/
-		fi
+else
+	echo "no such task"
+	fi
 		exit
 	done		
 	
@@ -167,7 +183,19 @@ addAnItem
 
 elif [ $choice ==  "C" ]; then
 listCompletedItems
-		
+elif [[ $choice =~ $number ]];then
+		count="1"
+	for i in ./todo/*.txt; do
+	[ -f "$i" ]|| break
+
+	if [ "$choice" -eq  "$count" ];then
+	cat $i
+fi
+	let count=count+1
+
+
+	done
+
 		elif [ $choice ==  "Q" ]; then
 			let counter=counter+1;
 		else echo "please enter a valid command!"
