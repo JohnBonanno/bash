@@ -26,11 +26,15 @@ filename=./todo/$@
 function list(){
 	count=0;
 for file in ./todo/*.txt; do
+	if [ -f $file ]; then
  title=$(head -n 1 $file)
  let count=count+1
  echo  "$count"
  echo "$title"
  echo ""
+else
+	echo "nothing on your to do list!"
+	fi
 done
 }
 
@@ -39,9 +43,11 @@ function listCompletedItems (){
 		echo "Completed items:"
 		
 			for i in ./completed/*.txt; do
-			cat $i		
+			cat $i	
+		echo ""	
 			done
-		echo "__________________________"
+		echo "end completed items"
+		echo " "
 }
 function addAnItem (){
 		echo -n "please enter an item to add: "	
@@ -73,6 +79,9 @@ function completeAnItem() {
 	if [ "$completed" -eq "$count" ]
 	then
 	mv $i ./completed/
+	break
+else 
+	echo "no such file!"
 
 		let count=count+1
 
@@ -117,14 +126,19 @@ elif [[ "$1" == "add" &&  "$2" ]]; then
 		#	echo "$filenumber"
 		touch ./todo/${todoNum}.txt 
 		echo $2 >> ./todo/${todoNum}.txt
-		chmod 700 ./todo/${todoNum}.txt
+chmod 700 ./todo/${todoNum}.txt
 
-		if  [ -p /dev/stdin ]; then
+		exit
+	
+
+elif  [ -p /dev/stdin ]; then
 			read pipe
-		echo $pipe >> ./todo/${todoNUM}.txt
-		fi
-
-					exit
+		#	echo "$pipe"
+		echo $2 >> ./todo/${todoNum}.txt
+		echo $pipe >>./todo/${todoNum}.txt 	
+		chmod 700 ./todo/${todoNum}.txt
+			
+		exit
 
 elif [ "$1" == "complete" ]; then
 
@@ -132,6 +146,7 @@ elif [ "$1" == "complete" ]; then
 	
 	if [ "$2" == "$(head -n 1 $i)" ]; then
 	mv $i ./completed/
+	break
 else
 	echo "no such task"
 	fi
@@ -156,7 +171,7 @@ while [ $counter -lt 1 ]; do
 
 
 
-#(cd ./todo/ && ls -v | cat -n | while read n f; do mv -n "$f" "$n.txt"; done) 
+#(cd ./todo/ && ls -v | cat -n | while read n f; do mv -n "$f" "$n.txt"; done)//sequential file naming 
 #(cd ./completed/ && ls -v | cat -n | while read n f; do mv -n "$f" "$n.txt"; done)
 
 echo " to do: "
