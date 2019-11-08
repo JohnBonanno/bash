@@ -128,7 +128,6 @@ else
 	fi
 elif [[ "$1" == "add" &&  "$2" ]]; then
 
-	
 		todoNum=$(cd ./todo/ && ls|wc -l)
 		let todoNum=todoNum+1
 		
@@ -143,9 +142,10 @@ elif [[ "$1" == "add" &&  "$2" ]]; then
 	#	echo $2 >> ./todo/${todoNum}.txt
 		echo  $pipe >> ./todo/${todoNum}.txt
 	fi
+chmod 700 ./todo/${todoNum}.txt
 exit
 
-chmod 700 ./todo/${todoNum}.txt
+
 
 	
 
@@ -158,16 +158,17 @@ chmod 700 ./todo/${todoNum}.txt
 
 elif [[ "$1" == "complete" && "$2" ]]; then
 
-	for i in ./todo/*.txt; do
-	[ -f "$i" ]|| continue 
-		if [ ./todo/${2}.txt == $i ]; then
-			mv $i ./completed
+
+ 
+		if [ -f   ./todo/${2}.txt ]; then
+			echo "true"
+			mv ./todo/${2}.txt ./completed/
 			exit
 		else
 	echo "no such task"
 	exit
 		fi
-	done
+
 
 
 else 
