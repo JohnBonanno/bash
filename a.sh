@@ -119,8 +119,8 @@ elif [[ "$1" == "list" && "$2" == "completed" || "$1" == "list completed" ]]; th
 elif [[ "$1" == "add" &&  "$2" ]]; then
 
 	
-		todoNum=$(cd ./todo/ && ls|wc -l)
-	let todoNum=todoNum+1
+		todoNum=$(cd ./todo/ && ls|wc -l)+1
+
 		
 		let count=count+1
 		#	echo "$filenumber"
@@ -128,16 +128,17 @@ elif [[ "$1" == "add" &&  "$2" ]]; then
 		echo $2 >> ./todo/${todoNum}.txt
 chmod 700 ./todo/${todoNum}.txt
 
-		exit
-#	elif  [[ $2 && -p /dev/stdin ]]; then
-#			read pipe
-		#	echo "$pipe"
-
-#		echo  $pipe>> ./todo/${todoNum}.txt
+	
+if  [ -p /dev/stdin ]; then
+			read pipe
+			echo "$pipe"
+		echo $2 >> ./todo/${todoNum}.txt
+		echo  $pipe >> ./todo/${todoNum}.txt
+fi
 	#	echo $pipe >>./todo/${todoNum}.txt 
 #		chmod 700 ./todo/${todoNum}.txt
 			
-#		exit
+		exit
 
 
 
