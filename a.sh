@@ -59,7 +59,7 @@ function addAnItem (){
 		touch ./todo/${todoNum}.txt 
 		echo ${newItem} >> ./todo/${todoNum}.txt
 		chmod 700 ./todo/${todoNum}.txt
-		echo "enter description"
+		echo -n "enter description: "
 		read description
 		
 		echo "__________________" >> ./todo/${todoNum}.txt
@@ -112,7 +112,11 @@ elif [ "$1" == "help" ]; then
 	echo "--HELP: list, complete [item], list completed, add [item]"
 	exit
 	
-elif [[ "$1" == "list" && "$2" == "completed" || "$1" == "list completed" ]]; then 
+elif [[ "$1" == "list" && "$2" == "completed" || "$1" == "list completed" ]]; then
+	if [ -z "$(ls -A ./completed)" ]; then
+	echo "no items are completed yet"
+exit	
+	fi	
 		listCompletedItems
 			exit
 		
@@ -145,15 +149,14 @@ fi
 
 
 
-elif [ "$1" == "complete" ]; then
+elif [[ "$1" == "complete" && "$2" ]]; then
 
 	for i in ./todo/*.txt; do
-	[ -f "$i" ]|| break
+	[ -f "$i" ]|| continue 
 		if [[ "$2" == *"$(head -n 1 $i)"* ]]; then
 
-			mv $i ./completed/
-	exit		
-	
+			mv $i ./completed
+
 else
 	echo "no such task"
 	exit
