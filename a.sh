@@ -129,30 +129,30 @@ elif [[ "$1" == "add" &&  "$2" ]]; then
 chmod 700 ./todo/${todoNum}.txt
 
 		exit
-	
-
-elif  [ -p /dev/stdin ]; then
-			read pipe
+#	elif  [[ $2 && -p /dev/stdin ]]; then
+#			read pipe
 		#	echo "$pipe"
-read a b <<< $(echo $2 $pipe)
-		echo $a >> ./todo/${todoNum}.txt
-		echo $b >>./todo/${todoNum}.txt 
-		chmod 700 ./todo/${todoNum}.txt
+
+#		echo  $pipe>> ./todo/${todoNum}.txt
+	#	echo $pipe >>./todo/${todoNum}.txt 
+#		chmod 700 ./todo/${todoNum}.txt
 			
-		exit
+#		exit
+
+
 
 elif [ "$1" == "complete" ]; then
 
 	for i in ./todo/*.txt; do
-	
-	if [ "$2" == "$(head -n 1 $i)" ]; then
+	[ -f "$i" ]|| break
+	if [[ "$2" == *"$(head -n 1 $i)"* ]]; then
 	mv $i ./completed/
-	break
+	exit		
 else
 	echo "no such task"
 	fi
-		exit
-	done		
+done
+		
 	
 	
 
