@@ -43,7 +43,11 @@ function listCompletedItems (){
 		echo "Completed items:"
 		
 			for i in ./completed/*.txt; do
-			cat $i	
+
+			
+			
+			cat $i
+		
 		echo ""	
 			done
 		echo "end completed items"
@@ -199,13 +203,22 @@ echo "Q) Quit"
 
 
 if [ $choice ==  "A" ]; then
+	if [ -z "$(ls -A ./todo)" ]; then
+  echo "no items to do"
+else	
 completeAnItem
+	fi
 
 elif [ $choice ==  "B" ]; then
 addAnItem
 
 elif [ $choice ==  "C" ]; then
+
+	if [ -z "$(ls -A ./completed)" ]; then
+  echo "no completed items"
+else
 listCompletedItems
+	fi
 elif [[ $choice =~ $number ]];then
 		count="1"
 	for i in ./todo/*.txt; do
