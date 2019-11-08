@@ -134,8 +134,9 @@ chmod 700 ./todo/${todoNum}.txt
 elif  [ -p /dev/stdin ]; then
 			read pipe
 		#	echo "$pipe"
-		echo $2 >> ./todo/${todoNum}.txt
-		echo $pipe >>./todo/${todoNum}.txt 	
+read a b <<< $(echo $2 $pipe)
+		echo $a >> ./todo/${todoNum}.txt
+		echo $b >>./todo/${todoNum}.txt 
 		chmod 700 ./todo/${todoNum}.txt
 			
 		exit
