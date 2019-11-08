@@ -126,6 +126,8 @@ elif [[ "$1" == "add" &&  "$2" ]]; then
 		#	echo "$filenumber"
 		touch ./todo/${todoNum}.txt 
 		echo $2 >> ./todo/${todoNum}.txt
+
+
 chmod 700 ./todo/${todoNum}.txt
 
 	
@@ -146,16 +148,16 @@ elif [ "$1" == "complete" ]; then
 
 	for i in ./todo/*.txt; do
 	[ -f "$i" ]|| break
-	if [[ "$2" == *"$(head -n 1 $i)"* ]]; then
-	mv $i ./completed/
+		if [[ "$2" == *"$(head -n 1 $i)"* ]]; then
+
+			mv $i ./completed/
 	exit		
+	
 else
 	echo "no such task"
-	fi
-done
-		
-	
-	
+	exit
+		fi
+	done
 
 
 else 
